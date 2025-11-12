@@ -1,0 +1,37 @@
+USER MANUAL: JAVA MANUAL INSTALLER SCRIPT
+
+Overview:
+-----------
+This script automates the manual installation of OpenJDK 21 for a specific Linux user (e.g. pet-clinic) without using a package manager. It ensures the user exists, downloads the correct JDK tarball, extracts it, and configures JAVA_HOME and PATH.
+
+Requirements:
+-------------
+1. Must be executed as root (or via sudo).
+2. Internet connection required for downloading the JDK tarball.
+3. `curl` and `tar` commands available.
+
+Usage:
+-------
+1. Save the script as asst.sh
+2. Make it executable:
+   chmod +x asst.sh
+3. Run it as root:
+   sudo ./asst.sh
+4. When prompted, enter the username (e.g. pet-clinic).
+
+After Execution:
+----------------
+- The user will be created if not already present.
+- The JDK will be downloaded into /home/<user>/java/
+- JAVA_HOME and PATH variables will be appended to ~/.bashrc for that user.
+- You can verify installation by switching to the user and running:
+    java -version
+
+Troubleshooting:
+-----------------
+- Ensure the JDK tarball URL is valid and accessible.
+- If java command not found, source the updated bashrc:
+  source ~/.bashrc
+
+End of User Manual.
+

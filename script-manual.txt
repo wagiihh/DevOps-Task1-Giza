@@ -1,0 +1,52 @@
+SCRIPT MANUAL: JAVA INSTALLER LOGIC BREAKDOWN
+
+Permission Check
+--------------------
+if [ "$EUID" -ne 0 ]; then
+  echo "Run as root" ; exit 1
+fi
+ Ensures the script is executed by root for user creation and environment setup.
+
+User Creation
+-----------------
+Prompts for username, stores in USER_NAME and USER_HOME.
+If user doesn't exist, creates it using:
+  useradd -m -s /bin/bash "$USER_NAME"
+
+JDK Setup Variables
+------------------------
+JDK_VERSION=21
+JDK_URL="https://download.oracle.com/java/21/latest/jdk-21_linux-aarch64_bin.tar.gz"
+ Defines version and URL for download.
+
+Running as Target User
+---------------------------
+sudo -u "$USER_NAME" env JDK_VERSION="$JDK_VERSION" JDK_URL="$JDK_URL" bash <<'EOF'
+ Switches context to that user and passes variables.
+
+JDK Download and Extraction
+-------------------------------
+mkdir -p ~/java && cd ~/java
+curl -fL -o jdk.tar.gz "$JDK_URL"
+tar -xzf jdk.tar.gz && rm jdk.tar.gz
+ Downloads and extracts JDK into ~/java.
+
+Detect Extracted Directory
+------------------------------
+JDK_DIR=$(find ~/java -maxdepth 1 -type d -name "jdk*" | head -n 1)
+ Finds the first folder starting with “jdk” and assigns path to JDK_DIR.
+
+Configure Environment
+-------------------------
+Appends to ~/.bashrc:
+export JAVA_HOME=$JDK_DIR
+export PATH="$JAVA_HOME/bin:$PATH"
+
+Ensures JDK is available on next login.
+
+Validation
+---------------
+Runs java -version to confirm installation.
+
+End of Script Manual.
+
